@@ -29,7 +29,7 @@ button[disabled]
 	height: 35px;
 	border-radius: 10px 10px 10px 10px
 }
-button[type=button]:active
+button[type=button]:active:enabled
 {
 	background-color: #F0F3F4;
 	color: black;
