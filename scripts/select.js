@@ -15,7 +15,7 @@ function my_select()
   		document.getElementById("select").disabled = true;
   	}
   	else{
-  		alert("Select the issue dumbass!!!");
+  		alert("Please, select an issue...");
   	}
 
   }
@@ -24,7 +24,7 @@ function my_reset()
 {
 	var x=document.getElementById("select").value;
 	if (x=="") {
-  		alert("Select the issue dumbass!!!");
+  		alert("Please, select an issue...");
   	}
 	switch(x){
   		case "Load Not Tracking GPS":
