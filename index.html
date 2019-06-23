@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FourKites Support Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type = "text/css" href="./css/new_style.css" >
+<script type="text/javascript" src="./scripts/select.js"></script>
+
+</head>
+<body>
+
+
+<img src="./Assets/img/FourKites-logo.png" alt="FourKites Logo">
+<div>
+      <h1>FourKites Troubleshooting Guide for Basic Issues</h1>
+</div>
+<br>
+<div>
+  <h2>Issue Selection</h2>
+  <p>Please click on the drop-down to select the issue:</p>
+</div>
+<br>
+<input list="browsers" name="browser" id="select">
+  <datalist id="browsers">
+    <option value="GPS">
+    <option value="Load Not Tracking GPS">
+    <option value="Superfile">
+    <option value="Compliance">
+    <option value="Load not found">
+  </datalist>
+<button type="button" onclick="my_select();" id="select_button">Submit</button>
+<button type="button" onclick="my_reset();">RESET</button>
+  <br>
+  <br>
+<!--<textarea rows="35" cols="121" id="fk_w" spellcheck="true" name="fk_window"></textarea>-->
+
+<!--*************************************************************************Articles Go Here********************************************************************-->
+<article id="load_not_tracking_gps" style="display: none;">
+  <h1>Load Not Tracking - GPS</h1>
+</article>
+
+<article id="super_file" style="display: none;">
+  <h1>Superfile Troubleshooting</h1>
+</article>
+</body>
+</html>

@@ -1,0 +1,74 @@
+body
+{
+	background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4);
+}
+
+img 
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10%
+}
+button
+{
+	border: 4px solid #86a8e7;
+	font-family: verdana;
+	color: black;
+	width: 120px;
+	height: 35px;
+	font-size: 20px;
+	border-radius: 10px 10px 10px 10px
+}
+button[disabled]
+{
+	border: 4px solid grey;
+	font-family: verdana;
+	color: grey;
+	width: 120px;
+	height: 35px;
+	border-radius: 10px 10px 10px 10px
+}
+h1
+{
+	font-family: verdana;
+	color: black;
+}
+h2
+{
+	font-family: verdana;
+	color: black;
+}
+p
+{
+	font-family: verdana;
+	color: black;
+	font-size: 20px;
+}
+input[list]
+{
+	width: 350px;
+	height: 30px;
+	border: 4px solid #86a8e7;
+    border-radius: 10px 10px 10px 10px;
+    font-size: 18px;
+    padding: 5px;
+}
+input[list][disabled]
+{
+	width: 350px;
+	height: 30px;
+	border: 4px solid grey;
+    border-radius: 10px 10px 10px 10px;
+    font-size: 18px;
+    padding: 5px;
+}
+div
+{	
+	border: solid 3px;
+	border-color: #86a8e7;
+	background: linear-gradient(to right, #005c97, #363795);
+	border-radius: 10px 10px 10px 10px;
+	padding: 5px 5px 5px 5px;
+	text-align: center;
+}
