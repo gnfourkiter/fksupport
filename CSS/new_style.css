@@ -35,7 +35,7 @@ button[type=button]:active
 	color: black;
 	transform: translateY(1px);
 }
-button[type=button]:hover
+button[type=button]:hover:enabled
 {
 	background-color: #dae2f8;
 	color: #414345;
