@@ -1,3 +1,5 @@
+//Submit button function...
+
 function my_select()
   {
   	var x=document.getElementById("select").value;
@@ -19,6 +21,8 @@ function my_select()
   	}
 
   }
+
+//Reset button function...
 
 function my_reset()
 {

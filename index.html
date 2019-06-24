@@ -22,11 +22,8 @@
 <br>
 <input list="browsers" name="browser" id="select">
   <datalist id="browsers">
-    <option value="GPS">
     <option value="Load Not Tracking GPS">
     <option value="Superfile">
-    <option value="Compliance">
-    <option value="Load not found">
   </datalist>
 <button type="button" onclick="my_select();" id="select_button">Submit</button>
 <button type="button" onclick="my_reset();">RESET</button>
@@ -35,17 +32,28 @@
 <!--<textarea rows="35" cols="121" id="fk_w" spellcheck="true" name="fk_window"></textarea>-->
 
 <!--*************************************************************************Articles Go Here********************************************************************-->
+
+<!--************************************************************************Load Not Tracking GPS****************************************************************-->
 <article id="load_not_tracking_gps" style="display: none;">
   <h2>Load Not Tracking - GPS</h2>
-  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-
-  <h2>Where does it come from?</h2>
-  <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</p>
-
-<button type="button">Click</button>
+  <p><b>1.</b> Check if the load is assigned with a truck/trailer number.</p>
+  <p class="exp">Here is an example from the shipper: Garushipper, have look at the load Test_for_deliveredAt. The load Test_for_deliveredAt is assigned with the truck 891 and the trailer 4189.</p>
+  <p><b>2.</b> Get the truck/trailer number and run a ping test. We have two cases here:</p>
+  <p class="indent">• Case 1: If the truck/trailer number is not returning any locations while doing a ping test, then that is a GPS issue. <strong>Use the issue selector above to select the GPS issue and then click on 'Submit').</strong></p>
+  <p class="indent">• Case 2: If the truck/trailer is returning locations (make sure that the timestamp is not older than 3 hours), and we aren't posting the locations on the platform, then that is a potential TRAC bug.</p>
+  <p><b>3.</b> Now, we know that the locations aren't posting on to the platform. We need to continue to <a href ="https://logentries.com/app" target="_blank">Logentries</a> to research further.</p>
+  <p class="exp">Sometimes the load is assigned with the truck/trailer number, but we receive only the City and the State information. E.g. Danforth, IL. We have to double check if these locations are actually coming from the GPS location provider. Usually, the GPS locations have the distance and Zip codes included in the location information. E.g.   0.23 miles from Vernon, CA - 90058</p>
+  <p><b>4.</b> Use the below search query in logentries to pull the locations received via GPS/ELD Provider.</p>
+  <p class="exp">&#60;load_id&#62; AND /Current location of load/ - in Global Worker logset. Look for errors in unique string.</p>
+  <p><b>5.</b> Use the below search query in logentries to find if the checkcall creation had any errors.</p>
+  <p class="exp">CheckCallsController AND &#60;load_id&#62; - in Tracking Service logset. Look for errors in unique string.</p>
+  <p><b>6.</b> Use the below search query in logentries to find errors while posting the location on to the platform.</p>
+  <p class="exp">/load_number/ AND POST_LOCATION_UPDATE - in Global Worker logset. Look for errors in unique string and don't forget to remove the trailing 0's from the load number.</p>
+  <p><b>7.</b> Now, we know two things:<br><br>&nbsp;&nbsp;&nbsp;a. This is not an issue with the GPS/ELD provider which we have already ruled out in step-2<br>&nbsp;&nbsp;&nbsp;b. We have an issue where the locations aren't posting to the platform.</p>
+  <p><b>8.</b> Regardless of error messages/codes, we have to create a TRAC bug because the issue is not in the integration, but with the platform.</p> 
 </article>
+
+<!--********************************************************************End of Load Not Tracking GPS****************************************************************-->
 
 <article id="super_file" style="display: none;">
   <h2>Superfile Troubleshooting</h2>
