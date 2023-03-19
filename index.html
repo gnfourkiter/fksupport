@@ -1,63 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>FourKites Support Page</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type = "text/css" href="./CSS/new_style.css" >
-<script type="text/javascript" src="./scripts/select.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/abbott.min.css"></link>
+  <title>List Separator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    textarea, input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px;
+    }
+    .container {
+      width: 50%;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Enter the case numbers (one-per-line)</h2>
+    <textarea id="inputList" rows="20" placeholder="Enter list items here"></textarea>
+    <strong>Separator (Whitespace is accepted)</strong><textarea type="text" id="separator"></textarea>
+    <strong>Prepend/Append-Character</strong><textarea type="text" id="pre_app_end"></textarea>
+    <button id="processList">Process List</button>
+    <h2>Result</h2>
+    <textarea rows=20 id="outputList"></textarea>
+  </div>
+  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/perl/perl.min.js"></script>
+  <script>
+    var editor = CodeMirror.fromTextArea(document.getElementById('inputList'), {
+    lineNumbers: true,
+    mode: 'text/x-perl',
+    theme: 'abbott',
+    });
+    
+    //const inputList = editor.getValue();
+    const processList = document.getElementById("processList");
+    const outputList = document.getElementById("outputList");
+    const sep = document.getElementById("separator");
+    const preAppPend = document.getElementById("pre_app_end");
 
 
-<img src="./Assets/img/FourKites-logo.png" alt="FourKites Logo">
-<div>
-      <h1>FourKites Troubleshooting Guide for Basic Issues</h1>
-</div>
-<br>
-<div>
-  <h2>Issue Selection</h2>
-  <p>Please click on the drop-down to select the issue:</p>
-</div>
-<br>
-<input list="browsers" name="browser" id="select">
-  <datalist id="browsers">
-        <option value="Load Not Tracking GPS"></option>
-        <option value="Superfile"></option>
-  </datalist>
-<button type="button" onclick="my_select();" id="select_button">Submit</button>
-<button type="button" onclick="my_reset();">RESET</button>
-  <br>
-  <br>
-<!--<textarea rows="35" cols="121" id="fk_w" spellcheck="true" name="fk_window"></textarea>-->
+    function joinList() {
+      //const separator = ",";
+      //const adder = ""
+      const s = sep.value;
+      const pa = preAppPend.value.trim();
+      const listItems = editor.getValue().trim().split("\n");
+ 	    let quotedLines = listItems.map(line => `${pa}${line.trim()}${pa}`).join(s);
+      outputList.value = quotedLines;
+    }
 
-<!--*************************************************************************Articles Go Here********************************************************************-->
+    processList.addEventListener("click", joinList);
+  </script>
 
-<!--************************************************************************Load Not Tracking GPS****************************************************************-->
-<article id="load_not_tracking_gps" style="display: none;">
-  <h2>Load Not Tracking - GPS</h2>
-  <p><b>1.</b> Check if the load is assigned with a truck/trailer number.</p>
-  <p class="exp">Here is an example from the shipper: Garushipper, have look at the load Test_for_deliveredAt. The load Test_for_deliveredAt is assigned with the truck 891 and the trailer 4189.</p>
-  <p><b>2.</b> Get the truck/trailer number and run a ping test. We have two cases here:</p>
-  <p class="indent">• Case 1: If the truck/trailer number is not returning any locations while doing a ping test, then that is a GPS issue. <strong>Use the issue selector above to select the GPS issue and then click on 'Submit').</strong></p>
-  <p class="indent">• Case 2: If the truck/trailer is returning locations (make sure that the timestamp is not older than 3 hours), and we aren't posting the locations on the platform, then that is a potential TRAC bug.</p>
-  <p><b>3.</b> Now, we know that the locations aren't posting on to the platform. We need to continue to <a href ="https://logentries.com/app" target="_blank">Logentries</a> to research further.</p>
-  <p class="exp">Sometimes the load is assigned with the truck/trailer number, but we receive only the City and the State information. E.g. Danforth, IL. We have to double check if these locations are actually coming from the GPS location provider. Usually, the GPS locations have the distance and Zip codes included in the location information. E.g.   0.23 miles from Vernon, CA - 90058</p>
-  <p><b>4.</b> Use the below search query in logentries to pull the locations received via GPS/ELD Provider.</p>
-  <p class="exp">&#60;load_id&#62; AND /Current location of load/ - in Global Worker logset. Look for errors in unique string.</p>
-  <p><b>5.</b> Use the below search query in logentries to find if the checkcall creation had any errors.</p>
-  <p class="exp">CheckCallsController AND &#60;load_id&#62; - in Tracking Service logset. Look for errors in unique string.</p>
-  <p><b>6.</b> Use the below search query in logentries to find errors while posting the location on to the platform.</p>
-  <p class="exp">/load_number/ AND POST_LOCATION_UPDATE - in Global Worker logset. Look for errors in unique string and don't forget to remove the trailing 0's from the load number.</p>
-  <p><b>7.</b> Now, we know two things:<br><br>&nbsp;&nbsp;&nbsp;a. This is not an issue with the GPS/ELD provider which we have already ruled out in step-2<br>&nbsp;&nbsp;&nbsp;b. We have an issue where the locations aren't posting to the platform.</p>
-  <p><b>8.</b> Regardless of error messages/codes, we have to create a TRAC bug because the issue is not in the integration, but with the platform.</p> 
-</article>
-
-<!--********************************************************************End of Load Not Tracking GPS****************************************************************-->
-
-<article id="super_file" style="display: none;">
-  <h2>Superfile Troubleshooting</h2>
-  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-</article>
 </body>
 </html>
