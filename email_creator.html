@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One-on-One Email Creator</title>
+  <style>
+    textarea, .edit-content {
+      width: 80%;
+      height: 400px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      resize: both;
+    }
+    .edit-content {
+      overflow-y: auto;
+    }
+    .generated-email {
+      overflow-y: auto;
+      background-color: #f8f8f8;
+    }
+    .resizable-image {
+      position: relative;
+      display: inline-block;
+    }
+    .resizable-image img {
+      display: block;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>One-on-One Email Creator Tool</h1>
+
+  <label for="analystName">Analyst Name:</label>
+  <select id="analystName">
+    <option value="Ananth">Ananth</option>
+    <option value="Sana">Sana</option>
+    <option value="Soumya">Soumya</option>
+    <option value="Ashok">Ashok</option>
+    <option value="Jael">Jael</option>
+  </select>
+  <br>
+<!--   <label for="subjectContent">Subject Line:</label><br>
+  <input type="text" size="170px" id="subjectContent" placeholder="Type your subjectline here."></input> -->
+  <br>
+  <label for="focusArea">Focus Area:</label><br>
+  <div id="focusArea" class="edit-content" contenteditable="true"></div>
+  <!--<textarea id="focusArea" placeholder="Type in the focus area for this analyst."></textarea>-->
+  <br>
+  <br>
+  <label for="concerns">Concerns:</label><br>
+  <textarea id="concerns" placeholder="Type in the concerns for this analyst."></textarea>
+  <br>
+  <br>
+  <label for="appreciations">Appreciations:</label><br>
+  <textarea id="appreciations" placeholder="Type in the list of appreciations for this analyst."></textarea>
+
+  <br>
+  <br>
+
+  <button id="generateEmail">Generate Email</button><br><br>
+
+  <label for="generatedEmail">Generated Email:</label><br>
+  <div id="generatedEmail" class="edit-content generated-email" contenteditable="false"></div>
+  <!--<textarea id="generatedEmail" readonly></textarea>-->
+  <br>
+  <button id="clearGeneratedEmail">Clear Generated Email</button>
+  <button id="copyGeneratedEmail">Copy Generated Email</button>
+
+  <script>
+    const analyst = document.getElementById('analystName');
+    const focusArea = document.getElementById('focusArea');
+    const concerns = document.getElementById('concerns');
+    const appreciations = document.getElementById('appreciations');
+    const generateEmail = document.getElementById('generateEmail');
+    const generatedEmail = document.getElementById('generatedEmail');
+
+    //For clear and copy buttons
+    const clearGeneratedEmail = document.getElementById('clearGeneratedEmail');
+    const copyGeneratedEmail = document.getElementById('copyGeneratedEmail');
+
+    //This is for focusArea alone.
+
+    focusArea.addEventListener('paste', (event) => {
+      const items = event.clipboardData.items;
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          const reader = new FileReader();
+
+          reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+
+            const resizableImage = document.createElement('div');
+            resizableImage.className = 'resizable-image';
+            resizableImage.appendChild(img);
+            focusArea.appendChild(resizableImage);
+
+            resizableImage.addEventListener('mousedown', (event) => {
+                event.preventDefault();
+                const startX = event.pageX;
+                const startY = event.pageY;
+                const startWidth = parseInt(document.defaultView.getComputedStyle(img).width, 10);
+                const startHeight = parseInt(document.defaultView.getComputedStyle(img).height, 10);
+                const aspectRatio = startWidth / startHeight;
+
+                const doDrag = (event) => {
+                  const newWidth = startWidth + event.pageX - startX;
+                  const newHeight = newWidth / aspectRatio;
+                  img.width = newWidth;
+                  img.height = newHeight;
+                };
+
+              const stopDrag = () => {
+                document.documentElement.removeEventListener('mousemove', doDrag, false);
+                document.documentElement.removeEventListener('mouseup', stopDrag, false);
+              };
+
+              document.documentElement.addEventListener('mousemove', doDrag, false);
+              document.documentElement.addEventListener('mouseup', stopDrag, false);
+            }, false);
+          };
+
+          reader.readAsDataURL(file);
+          event.preventDefault();
+        }
+      }
+    });
+
+  //New Code above
+
+    generateEmail.addEventListener('click', () => {
+      const ananlystText = analyst.value;
+      const focusText = focusArea.innerHTML;
+      const concernsText = concerns.value;
+      const appreciationsText = appreciations.value;
+
+      //For current date
+      const currentDate = new Date();
+      const formattedDate = currentDate.getFullYear() + '/' + String(currentDate.getMonth() + 1).padStart(2, '0') + '/' + String(currentDate.getDate()).padStart(2, '0');
+
+      const email = `Subject: One-on-One | ${ananlystText} | ${formattedDate}
+----------------------------------------------------------
+Hi ${ananlystText},
+
+I hope you are doing great!
+
+I reviewed your cases this week and here is the feedback case-wise:
+
+${focusText}
+Here are the list of concerns that you have raised this week:
+
+${concernsText}
+
+Appreciations this week:
+
+${appreciationsText}
+
+Please review the above information and reach out to me if you have any questions.
+
+Thanks & Regards
+`;
+    
+      const formattedEmail = email.replace(/\n/g, '<br>');
+
+      generatedEmail.innerHTML = formattedEmail;
+    });
+
+//For clearing and copying.
+
+clearGeneratedEmail.addEventListener('click', () => {
+  generatedEmail.innerHTML = '';
+});
+
+copyGeneratedEmail.addEventListener('click', async () => {
+  try {
+    const blob = new Blob([generatedEmail.innerHTML], { type: 'text/html' });
+    const data = [new ClipboardItem({ 'text/html': blob })];
+    await navigator.clipboard.write(data);
+    alert('Generated email copied to clipboard!');
+  } catch (err) {
+    console.error('Error occurred while copying: ', err);
+  }
+});
+
+//script end.
+  </script>
+</body>
+</html>
